@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AV Vision Pipeline - Andreas Nøbbe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+        .header h1 {
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .tech-badge {
+            background: #007bff;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .section {
+            margin: 30px 0;
+        }
+        .section h2 {
+            color: #333;
+            border-left: 4px solid #007bff;
+            padding-left: 15px;
+        }
+        .architecture {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .demo-container {
+            margin: 30px 0;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .demo-header {
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        .demo-iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        .devops-workflow {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .workflow-step {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 5px;
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+        }
+        .links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .link-button {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .link-button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 AV Vision Pipeline</h1>
+            <p><strong>Autonomous Vehicle Object Detection System</strong></p>
+            <p>Complete MLOps pipeline for real-time object detection in autonomous vehicles</p>
+            
+            <div class="tech-stack">
+                <span class="tech-badge">Python</span>
+                <span class="tech-badge">FastAPI</span>
+                <span class="tech-badge">Streamlit</span>
+                <span class="tech-badge">YOLO</span>
+                <span class="tech-badge">OpenCV</span>
+                <span class="tech-badge">PyTorch</span>
+                <span class="tech-badge">Pytest</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎯 Project Overview</h2>
+            <p>This project demonstrates a complete <strong>web-based object detection system</strong> for autonomous vehicle applications. It combines computer vision, web APIs, and modern Python development practices to create a working system that can detect vehicles, pedestrians, and traffic infrastructure in real-time.</p>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <h3>🔍 Object Detection</h3>
+                    <p>YOLO-based detection of vehicles, pedestrians, and traffic infrastructure with confidence scoring and bounding box visualization.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌐 Web API</h3>
+                    <p>RESTful FastAPI backend with automatic documentation, error handling, and file upload capabilities.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📱 Interactive Frontend</h3>
+                    <p>Streamlit web interface for easy image upload, real-time detection, and results visualization.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🧪 Testing & Quality</h3>
+                    <p>Unit tests with pytest, proper error handling, and professional code structure with virtual environments.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🏗️ System Architecture</h2>
+            <div class="architecture">
+                <pre style="font-family: monospace; font-size: 0.9em; line-height: 1.4;">
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Image Upload  │───▶│  FastAPI Server │───▶│  YOLO Detection │
+│  (Streamlit UI) │    │   (Backend)     │    │    (Model)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         ▲                        │                        │
+         │                        ▼                        ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│ Results Display │◀───│  JSON Response  │◀───│   Detection     │
+│ (Bounding Boxes)│    │   (REST API)    │    │   Processing    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+                </pre>
+            </div>
+        </div>
+
+        <div class="devops-workflow">
+            <h2>🛠️ Development Practices</h2>
+            <p>This project demonstrates solid Python development practices:</p>
+            
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <h4>🏗️ Project Structure</h4>
+                    <p>Modular code organization, virtual environments, dependency management</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>🧪 Testing</h4>
+                    <p>Unit tests with pytest, error handling, validation</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>🌐 Web Development</h4>
+                    <p>RESTful API design, interactive frontend, real-time processing</p>
+                </div>
+                <div class="workflow-step">
+                    <h4>🔧 Problem Solving</h4>
+                    <p>Debugging dependency conflicts, troubleshooting tools</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>💼 Technical Skills Demonstrated</h2>
+            <ul>
+                <li><strong>Machine Learning:</strong> Computer vision, object detection, model integration with YOLO</li>
+                <li><strong>Backend Development:</strong> FastAPI, RESTful APIs, async programming, error handling</li>
+                <li><strong>Frontend Development:</strong> Streamlit, interactive web applications, file uploads</li>
+                <li><strong>Python Development:</strong> Virtual environments, package management, modular code structure</li>
+                <li><strong>Testing:</strong> Unit testing with pytest, debugging, troubleshooting</li>
+                <li><strong>Problem Solving:</strong> Dependency conflicts, PyTorch compatibility issues</li>
+            </ul>
+        </div>
+
+        <div class="demo-container">
+            <div class="demo-header">
+                <h2>🎮 Interactive Demo</h2>
+                <p>Upload an image to see the object detection system in action</p>
+            </div>
+            <!-- Replace with your actual Streamlit app URL when deployed -->
+            <iframe src="http://localhost:8501" class="demo-iframe" title="AV Vision Pipeline Demo"></iframe>
+        </div>
+
+        <div class="links">
+            <a href="https://github.com/yourusername/av-vision-pipeline" class="link-button" target="_blank">
+                📄 View Source Code
+            </a>
+            <a href="http://localhost:8000/docs" class="link-button" target="_blank">
+                📚 API Documentation
+            </a>
+            <a href="http://localhost:8501" class="link-button" target="_blank">
+                🚀 Live Demo
+            </a>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Implementation Highlights</h2>
+            <h3>Object Detection Pipeline</h3>
+            <p>Built with YOLOv8 (powered by PyTorch) for real-time detection of:</p>
+            <ul>
+                <li>🚗 <strong>Vehicles:</strong> Cars, trucks, buses, motorcycles</li>
+                <li>🚶 <strong>Pedestrians:</strong> People and cyclists</li>
+                <li>🚦 <strong>Infrastructure:</strong> Traffic lights and stop signs</li>
+            </ul>
+
+            <h3>API Design</h3>
+            <p>RESTful FastAPI backend featuring:</p>
+            <ul>
+                <li>Automatic OpenAPI documentation</li>
+                <li>File upload validation and processing</li>
+                <li>Error handling and logging</li>
+                <li>CORS support for web integration</li>
+            </ul>
+
+            <h3>Development Practices</h3>
+            <p>Professional Python development workflow:</p>
+            <ul>
+                <li>Virtual environment isolation and dependency management</li>
+                <li>Comprehensive unit testing with pytest</li>
+                <li>Modular code structure with proper imports</li>
+                <li>Error handling and troubleshooting tools</li>
+                <li>Real-world debugging (PyTorch compatibility issues)</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

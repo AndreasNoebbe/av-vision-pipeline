@@ -1,0 +1,107 @@
+# .gitignore
+# Files and directories to exclude from Git version control
+
+# Virtual Environment
+# Why exclude? Every developer creates their own venv
+venv/
+env/
+ENV/
+
+# Python Cache Files  
+# Why exclude? These are generated automatically and differ between machines
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+# Why exclude? These are build artifacts, not source code
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+# Why exclude? Test results vary between runs, we only care about the test code
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+# Why exclude? These are temporary files created by Jupyter
+.ipynb_checkpoints
+
+# Environment variables
+# Why exclude? Contains secrets and local configuration
+.env
+.venv
+
+# IDE specific files
+# Why exclude? Different developers use different editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System files
+# Why exclude? OS-specific files that shouldn't be shared
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ML/AI specific
+# Why exclude? Model files are large and should be managed separately
+*.pt
+*.pth
+*.onnx
+*.h5
+models/
+data/raw/
+data/processed/
+
+# Logs
+# Why exclude? Log files are generated at runtime
+*.log
+logs/
+
+# MLflow
+# Why exclude? Experiment tracking data is local to each developer
+mlruns/
+mlflow.db
+
+# Docker
+# Why exclude? Docker builds create temporary files
+.dockerignore
+
+# Temporary files
+tmp/
+temp/
