@@ -1,13 +1,12 @@
 """
 frontend_app.py
 
-Streamlit frontend for AV Vision Pipeline
-This creates a web interface for uploading images and viewing object detection results.
+Streamlit frontend for AV Vision Pipeline (Demo Version)
+This creates a web interface demonstrating the object detection system.
 """
 
 import streamlit as st
 import requests
-import cv2
 import numpy as np
 from PIL import Image
 import json
@@ -22,36 +21,52 @@ st.set_page_config(
 # Title and description
 st.title("🚗 AV Vision Pipeline")
 st.markdown("**Autonomous Vehicle Object Detection System**")
-st.markdown("Upload an image to detect vehicles, pedestrians, and road infrastructure.")
+st.markdown("Upload an image to see the object detection interface (Demo Version)")
 
-# API endpoint
+# Demo mode warning
+st.warning("⚠️ **Demo Mode**: This is a frontend demonstration. The actual object detection runs on a local FastAPI backend. [View full technical implementation on GitHub](https://github.com/AndreasNoebbe/av-vision-pipeline)")
+
+# API endpoint (will fail in demo mode)
 API_URL = "http://localhost:8000"
 
 def check_api_health():
     """Check if the FastAPI backend is running"""
     try:
-        response = requests.get(f"{API_URL}/health", timeout=5)
+        response = requests.get(f"{API_URL}/health", timeout=2)
         return response.status_code == 200
     except:
         return False
 
-def detect_objects(image_file):
-    """Send image to FastAPI backend for object detection"""
-    try:
-        files = {"file": image_file}
-        response = requests.post(f"{API_URL}/detect", files=files, timeout=30)
-        
-        if response.status_code == 200:
-            return response.json()
-        else:
-            st.error(f"API Error: {response.status_code} - {response.text}")
-            return None
-    except Exception as e:
-        st.error(f"Connection Error: {str(e)}")
-        return None
+def create_demo_detections():
+    """Create demo detection results for showcase"""
+    return [
+        {
+            "class_name": "car",
+            "av_category": "vehicle",
+            "confidence": 0.92,
+            "bbox": [150, 200, 350, 350],
+            "center": [250, 275]
+        },
+        {
+            "class_name": "person", 
+            "av_category": "pedestrian",
+            "confidence": 0.87,
+            "bbox": [400, 150, 480, 320],
+            "center": [440, 235]
+        },
+        {
+            "class_name": "traffic light",
+            "av_category": "infrastructure", 
+            "confidence": 0.94,
+            "bbox": [80, 50, 120, 150],
+            "center": [100, 100]
+        }
+    ]
 
-def draw_detections(image, detections):
-    """Draw bounding boxes on the image"""
+def draw_demo_detections(image):
+    """Draw demo bounding boxes on the image"""
+    import cv2
+    
     img_array = np.array(image)
     
     # Color mapping for different categories
@@ -61,38 +76,52 @@ def draw_detections(image, detections):
         'infrastructure': (0, 0, 255) # Blue
     }
     
+    detections = create_demo_detections()
+    
     for detection in detections:
         bbox = detection['bbox']
-        x1, y1, x2, y2 = map(int, bbox)
+        x1, y1, x2, y2 = bbox
+        
+        # Scale to image size
+        h, w = img_array.shape[:2]
+        x1 = int(x1 * w / 640)
+        y1 = int(y1 * h / 480) 
+        x2 = int(x2 * w / 640)
+        y2 = int(y2 * h / 480)
         
         category = detection['av_category']
         color = colors.get(category, (255, 255, 255))
         
         # Draw bounding box
-        cv2.rectangle(img_array, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(img_array, (x1, y1), (x2, y2), color, 3)
         
         # Draw label
         label = f"{detection['class_name']}: {detection['confidence']:.2f}"
         cv2.putText(img_array, label, (x1, y1-10), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2)
     
     return Image.fromarray(img_array)
 
-# Sidebar for API status
+# Sidebar for system info
 with st.sidebar:
     st.header("System Status")
     
     if check_api_health():
         st.success("✅ API Online")
     else:
-        st.error("❌ API Offline")
-        st.markdown("Make sure your FastAPI server is running:")
-        st.code("uvicorn src.api:app --reload --host 0.0.0.0 --port 8000")
+        st.error("❌ API Offline (Demo Mode)")
+        st.info("💡 This demo shows the interface design. The full system with FastAPI backend runs locally.")
     
     st.header("Detection Categories")
     st.markdown("🟢 **Vehicles**: Cars, trucks, buses, motorcycles")
     st.markdown("🔴 **Pedestrians**: People, cyclists") 
     st.markdown("🔵 **Infrastructure**: Traffic lights, stop signs")
+    
+    st.header("Technical Stack")
+    st.markdown("• **Backend**: FastAPI + YOLO")
+    st.markdown("• **Frontend**: Streamlit")
+    st.markdown("• **ML**: PyTorch + OpenCV")
+    st.markdown("• **Testing**: Pytest")
 
 # Main interface
 col1, col2 = st.columns([1, 1])
@@ -103,7 +132,7 @@ with col1:
     uploaded_file = st.file_uploader(
         "Choose an image...",
         type=['jpg', 'jpeg', 'png'],
-        help="Upload an image with vehicles, pedestrians, or traffic infrastructure"
+        help="Upload an image to see the detection interface demo"
     )
     
     if uploaded_file is not None:
@@ -112,82 +141,106 @@ with col1:
         st.image(image, caption="Uploaded Image", use_container_width=True)
         
         # Detection button
-        if st.button("🔍 Detect Objects", type="primary"):
-            if not check_api_health():
-                st.error("Cannot connect to API. Please start the FastAPI server.")
-            else:
-                with st.spinner("Analyzing image..."):
-                    # Reset file pointer
-                    uploaded_file.seek(0)
-                    
-                    # Get detections
-                    detections = detect_objects(uploaded_file)
-                    
-                    if detections is not None:
-                        # Store results in session state
-                        st.session_state.detections = detections
-                        st.session_state.image = image
-                        st.success(f"✅ Detected {len(detections)} objects!")
+        if st.button("🔍 Detect Objects (Demo)", type="primary"):
+            with st.spinner("Running demo detection..."):
+                # Create demo results
+                st.session_state.demo_detections = create_demo_detections()
+                st.session_state.demo_image = image
+                st.success("✅ Demo detection completed!")
 
 with col2:
     st.header("Detection Results")
     
-    if 'detections' in st.session_state and 'image' in st.session_state:
-        detections = st.session_state.detections
-        image = st.session_state.image
+    if 'demo_detections' in st.session_state and 'demo_image' in st.session_state:
+        detections = st.session_state.demo_detections
+        image = st.session_state.demo_image
         
-        if detections:
-            # Draw detections on image
-            result_image = draw_detections(image, detections)
-            st.image(result_image, caption="Detection Results", use_container_width=True)
-            
-            # Detection statistics
-            st.subheader("Detection Summary")
-            
-            # Count by category
-            category_counts = {}
-            for detection in detections:
-                category = detection['av_category']
-                category_counts[category] = category_counts.get(category, 0) + 1
-            
-            # Display counts
-            for category, count in category_counts.items():
-                emoji = "🟢" if category == "vehicle" else "🔴" if category == "pedestrian" else "🔵"
-                st.metric(f"{emoji} {category.title()}s", count)
-            
-            # Detailed results
-            st.subheader("Detailed Results")
-            
-            for i, detection in enumerate(detections, 1):
-                with st.expander(f"Detection {i}: {detection['class_name']} ({detection['confidence']:.1%})"):
-                    col_a, col_b = st.columns(2)
-                    
-                    with col_a:
-                        st.write(f"**Class:** {detection['class_name']}")
-                        st.write(f"**Category:** {detection['av_category']}")
-                        st.write(f"**Confidence:** {detection['confidence']:.1%}")
-                    
-                    with col_b:
-                        st.write(f"**Center:** ({detection['center'][0]:.0f}, {detection['center'][1]:.0f})")
-                        bbox = detection['bbox']
-                        st.write(f"**Bounding Box:** ({bbox[0]:.0f}, {bbox[1]:.0f}, {bbox[2]:.0f}, {bbox[3]:.0f})")
-            
-            # Export results
-            st.subheader("Export Results")
-            
-            # JSON download
-            json_data = json.dumps(detections, indent=2)
-            st.download_button(
-                label="📥 Download JSON",
-                data=json_data,
-                file_name="detection_results.json",
-                mime="application/json"
-            )
-        else:
-            st.info("No objects detected in the image.")
+        # Draw demo detections on image
+        result_image = draw_demo_detections(image)
+        st.image(result_image, caption="Demo Detection Results", use_container_width=True)
+        
+        # Detection statistics
+        st.subheader("Detection Summary")
+        
+        # Count by category
+        category_counts = {}
+        for detection in detections:
+            category = detection['av_category']
+            category_counts[category] = category_counts.get(category, 0) + 1
+        
+        # Display counts
+        col_a, col_b, col_c = st.columns(3)
+        with col_a:
+            st.metric("🟢 Vehicles", category_counts.get('vehicle', 0))
+        with col_b:
+            st.metric("🔴 Pedestrians", category_counts.get('pedestrian', 0))
+        with col_c:
+            st.metric("🔵 Infrastructure", category_counts.get('infrastructure', 0))
+        
+        # Detailed results
+        st.subheader("Detailed Results")
+        
+        for i, detection in enumerate(detections, 1):
+            with st.expander(f"Detection {i}: {detection['class_name']} ({detection['confidence']:.1%})"):
+                col_a, col_b = st.columns(2)
+                
+                with col_a:
+                    st.write(f"**Class:** {detection['class_name']}")
+                    st.write(f"**Category:** {detection['av_category']}")
+                    st.write(f"**Confidence:** {detection['confidence']:.1%}")
+                
+                with col_b:
+                    st.write(f"**Center:** ({detection['center'][0]}, {detection['center'][1]})")
+                    bbox = detection['bbox']
+                    st.write(f"**Bounding Box:** ({bbox[0]}, {bbox[1]}, {bbox[2]}, {bbox[3]})")
+        
+        # Export results
+        st.subheader("Export Demo Results")
+        
+        # JSON download
+        json_data = json.dumps(detections, indent=2)
+        st.download_button(
+            label="📥 Download Demo JSON",
+            data=json_data,
+            file_name="demo_detection_results.json",
+            mime="application/json"
+        )
     else:
-        st.info("Upload an image and click 'Detect Objects' to see results here.")
+        st.info("Upload an image and click 'Detect Objects (Demo)' to see the interface demonstration.")
+
+# Technical implementation section
+st.markdown("---")
+
+with st.expander("🔧 Technical Implementation Details"):
+    st.markdown("""
+    ### Architecture Overview
+    
+    **Backend (FastAPI)**:
+    - RESTful API with automatic OpenAPI documentation
+    - YOLO object detection model integration
+    - Image upload and processing endpoints
+    - Error handling and validation
+    
+    **Frontend (Streamlit)**:
+    - Interactive web interface
+    - Real-time image upload and display
+    - Results visualization with bounding boxes
+    - Export functionality for detection data
+    
+    **Object Detection**:
+    - YOLOv8 model powered by PyTorch
+    - Detects vehicles, pedestrians, and infrastructure
+    - Returns confidence scores and bounding box coordinates
+    - Optimized for autonomous vehicle applications
+    
+    **Development Practices**:
+    - Unit testing with pytest (6 tests passing)
+    - Virtual environment isolation
+    - Modular code structure
+    - Comprehensive error handling
+    - Version control with Git
+    """)
 
 # Footer
 st.markdown("---")
-st.markdown("**AV Vision Pipeline** - Built with FastAPI + Streamlit for autonomous vehicle object detection")
+st.markdown("**AV Vision Pipeline** - Built by Andreas Nøbbe | [GitHub Repository](https://github.com/AndreasNoebbe/av-vision-pipeline)")
