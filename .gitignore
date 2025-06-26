@@ -105,3 +105,11 @@ mlflow.db
 # Temporary files
 tmp/
 temp/
+# YOLO model files (downloaded automatically)
+*.pt
+*.pth
+*.onnx
+
+# Make sure venv is excluded
+venv/
+.venv/
