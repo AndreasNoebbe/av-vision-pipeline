@@ -27,7 +27,7 @@ st.markdown("Upload an image to see the object detection interface (Demo Version
 st.warning("⚠️ **Demo Mode**: This is a frontend demonstration. The actual object detection runs on a local FastAPI backend. [View full technical implementation on GitHub](https://github.com/AndreasNoebbe/av-vision-pipeline)")
 
 # API endpoint (will fail in demo mode)
-API_URL = "http://localhost:8000"
+API_URL = "https://andedam-av-vision-pipeline.hf.space"
 
 def check_api_health():
     """Check if the FastAPI backend is running"""
