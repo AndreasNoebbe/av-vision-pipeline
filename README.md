@@ -23,13 +23,9 @@ Detects vehicles, pedestrians, and traffic infrastructure in uploaded images. Re
 | **Frontend** | Streamlit | Streamlit Cloud |
 | **ML Model** | PyTorch + OpenCV | Cloud-hosted |
 
-## Project Structure
-├── src/
-│   ├── api.py          # FastAPI application
-│   ├── detector.py     # YOLO detection logic
-│   └── __init__.py
-├── tests/
-│   └── test_detector.py
-├── frontend_app.py     # Streamlit interface
-├── requirements.txt    # Streamlit deployment
-└── requirements-full.txt # Local development
+## Example:
+![image](https://github.com/user-attachments/assets/38be8506-b038-4693-8359-aec541fddbab)
+![image](https://github.com/user-attachments/assets/38be8506-b038-4693-8359-aec541fddbab)
+
+![image](https://github.com/user-attachments/assets/5149d78c-8c23-4554-9a4a-6221f6091e3d)
+![image](https://github.com/user-attachments/assets/5149d78c-8c23-4554-9a4a-6221f6091e3d)
