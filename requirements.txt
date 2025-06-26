@@ -1,34 +1,12 @@
-# requirements.txt
-# Starting with essential dependencies for our object detection project
-
-# + forklaring hvorfor vi bruger disse pakker
-
-# Computer Vision & ML
-opencv-python==4.8.1.78     # Image processing, camera handling
-ultralytics>=8.0.200        # YOLO object detection models (latest for PyTorch compatibility)
-torch>=2.0.0,<2.6.0         # PyTorch (pin below 2.6 to avoid weights_only issues)
-torchvision>=0.15.0         # Computer vision models and transforms
-numpy==1.24.3               # Numerical operations, array handling
-Pillow==10.0.1              # Image loading and manipulation
-
-# Web API (for our FastAPI backend)
-fastapi==0.104.1            # Modern Python web framework
-uvicorn[standard]==0.24.0   # ASGI server to run FastAPI
-python-multipart==0.0.6     # For handling file uploads
-
-# Data handling & validation
-pydantic==2.5.0             # Data validation and settings
-pandas==2.1.3               # Data manipulation (for logging/metrics)
-
-# Development & Testing
-pytest==7.4.3              # Testing framework
-pytest-cov==4.1.0          # Test coverage reporting
-pytest-asyncio==0.21.1     # Testing async code
-
-# Future MLOps tools (we'll use these later)
-mlflow==2.8.1              # Experiment tracking
-python-dotenv==1.0.0       # Environment variable management
-
-# Utility
-requests==2.31.0           # HTTP requests (for testing APIs)
-python-json-logger==2.0.7  # Structured logging
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+pydantic==2.5.0
+requests==2.31.0
+python-dotenv==1.0.0
+numpy==1.24.3
+pillow==10.0.1
+opencv-python-headless==4.8.1.78
+torch==2.0.1
+torchvision==0.15.2
+ultralytics==8.0.196
